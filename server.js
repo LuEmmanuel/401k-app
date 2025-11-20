@@ -31,6 +31,7 @@ app.get("/api/contribution", (req, res) => {
   }
 });
 
+// POST to update current contribution settings
 app.post("/api/contribution", (req, res) => {
   const { type, value } = req.body;
 
@@ -45,9 +46,22 @@ app.post("/api/contribution", (req, res) => {
 
   try {
     const data = readData();
-    data.current = { type, value: numericValue };
+
+    const nowIso = new Date().toISOString();
+
+    // Save type, value, and timestamp of last save
+    data.current = {
+      type,
+      value: numericValue,
+      savedAt: nowIso,
+    };
+
     writeData(data);
-    res.json({ success: true, current: data.current });
+
+    res.json({
+      success: true,
+      current: data.current,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to save contribution data" });

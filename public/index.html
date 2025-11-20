@@ -1,705 +1,947 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>401(k) Contribution Settings</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      :root {
-        --bg: #0f172a;
-        --card-bg: #020617;
-        --accent: #38bdf8;
-        --accent-soft: rgba(56, 189, 248, 0.08);
-        --accent-strong: #0ea5e9;
-        --text-main: #e5e7eb;
-        --text-subtle: #9ca3af;
-        --border-soft: #1e293b;
-        --danger: #f87171;
-        --success: #4ade80;
-        --card-radius: 16px;
-        --transition: all 0.2s ease;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>401(k) Contribution Settings</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1e40af;
+      --primary-light: #3b82f6;
+      --secondary: #10b981;
+      --dark-bg: #0f172a;
+      --dark-card: #1e293b;
+      --dark-border: #334155;
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --radius: 12px;
+      --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      --transition: all 0.2s ease;
+    }
 
-      * {
-        box-sizing: border-box;
-      }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-      body {
-        margin: 0;
-        min-height: 100vh;
-        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        background: radial-gradient(circle at top left, #1d2533, #020617 55%);
-        color: var(--text-main);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 1.5rem;
-        line-height: 1.5;
-      }
+    body {
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e1b4b);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 2.5rem 2rem;
+    }
 
-      .shell {
-        width: 100%;
-        max-width: 1000px;
-      }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
 
-      .app-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
-        gap: 1rem;
-      }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.75rem;
+      gap: 1.5rem;
+    }
 
-      .app-title {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-      }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
 
-      .app-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 12px;
-        background: linear-gradient(135deg, #38bdf8, #0ea5e9);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: white;
-        box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
-      }
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 1.25rem;
+      box-shadow: var(--shadow);
+    }
 
-      h1 {
-        margin: 0;
-        font-size: 1.5rem;
-        font-weight: 600;
-      }
+    .logo-text h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
 
-      .app-header-subtitle {
-        font-size: 0.9rem;
-        color: var(--text-subtle);
-        margin-top: 0.25rem;
-      }
+    .logo-text p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
 
-      .badge {
-        border-radius: 999px;
-        padding: 0.4rem 0.8rem;
-        font-size: 0.75rem;
-        border: 1px solid rgba(148, 163, 184, 0.3);
-        color: var(--text-subtle);
-        white-space: nowrap;
-        background: rgba(15, 23, 42, 0.6);
-        backdrop-filter: blur(10px);
-      }
+    .badge {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid var(--dark-border);
+      border-radius: 20px;
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      backdrop-filter: blur(10px);
+      white-space: nowrap;
+    }
 
-      .card {
-        background: linear-gradient(145deg, #0f172a, #1e293b);
-        border-radius: var(--card-radius);
-        padding: 2rem;
-        border: 1px solid rgba(56, 189, 248, 0.1);
-        box-shadow: 0 20px 40px rgba(2, 6, 23, 0.6);
-        position: relative;
-        overflow: hidden;
-      }
+    .card {
+      background: var(--dark-card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--dark-border);
+      overflow: hidden;
+    }
 
-      .card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.4), transparent);
-      }
+    .card-header {
+      padding: 1.75rem 2.5rem;
+      border-bottom: 1px solid var(--dark-border);
+      background: rgba(30, 41, 59, 0.7);
+    }
 
-      .card-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr);
-        gap: 2.5rem;
-      }
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
 
-      @media (max-width: 800px) {
-        .card-grid {
-          grid-template-columns: minmax(0, 1fr);
-          gap: 1.5rem;
-        }
-      }
+    .card-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      max-width: 650px;
+    }
 
-      .section-title {
-        font-weight: 600;
-        font-size: 0.95rem;
-        margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
+    .card-body {
+      padding: 2.5rem 2.5rem 2.75rem;
+    }
 
-      .section-title span.step {
-        width: 22px;
-        height: 22px;
-        border-radius: 999px;
-        background: var(--accent-soft);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.75rem;
-        color: var(--accent-strong);
-        font-weight: 600;
-      }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1.1fr;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
 
-      .section-subtext {
-        font-size: 0.85rem;
-        color: var(--text-subtle);
-        margin-bottom: 1rem;
-        line-height: 1.5;
+    @media (max-width: 968px) {
+      .grid {
+        grid-template-columns: 1fr;
       }
+    }
 
-      .radio-group {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-      }
+    .section {
+      margin-bottom: 2.6rem;
+    }
 
-      .radio-card {
-        border-radius: 12px;
-        border: 1px solid var(--border-soft);
-        padding: 0.85rem 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-        cursor: pointer;
-        font-size: 0.9rem;
-        background: rgba(15, 23, 42, 0.5);
-        transition: var(--transition);
-        flex: 1;
-        min-width: 180px;
-      }
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
 
-      .radio-card input {
-        accent-color: var(--accent-strong);
-      }
+    .step-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
 
-      .radio-card:hover {
-        border-color: var(--accent);
-        background: rgba(56, 189, 248, 0.05);
-      }
+    .section-heading {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
 
-      .radio-card.selected {
-        border-color: var(--accent);
-        background: rgba(56, 189, 248, 0.08);
-      }
+    .section-description {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
 
-      .label {
-        font-size: 0.85rem;
-        color: var(--text-subtle);
-        margin-bottom: 0.4rem;
-        font-weight: 500;
-      }
+    .radio-group {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
 
-      .input-row {
-        display: flex;
-        gap: 1.5rem;
-        align-items: flex-end;
-        flex-wrap: wrap;
-      }
+    .radio-card {
+      flex: 1;
+      border: 1px solid var(--dark-border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.4rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
 
-      .field {
-        flex: 1;
-        min-width: 0;
-      }
+    .radio-card:hover {
+      border-color: var(--primary);
+    }
 
-      .input-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: rgba(15, 23, 42, 0.6);
-        border-radius: 12px;
-        border: 1px solid var(--border-soft);
-        padding: 0.6rem 0.9rem 0.6rem 1rem;
-        transition: var(--transition);
-      }
+    .radio-card.selected {
+      border-color: var(--primary);
+      background: rgba(37, 99, 235, 0.1);
+    }
 
-      .input-wrapper:focus-within {
-        border-color: var(--accent);
-        box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
-      }
+    .radio-card input {
+      margin-right: 0.35rem;
+    }
 
-      input[type="number"] {
-        background: transparent;
-        border: none;
-        outline: none;
-        color: var(--text-main);
-        width: 80px;
-        font-size: 1rem;
-        font-weight: 500;
-      }
+    .input-group {
+      margin-bottom: 1.6rem;
+    }
 
-      input[type="number"]::-webkit-outer-spin-button,
-      input[type="number"]::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
+    .input-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
 
-      .suffix-pill {
-        border-radius: 999px;
-        padding: 0.2rem 0.6rem;
-        font-size: 0.75rem;
-        background: var(--accent-soft);
-        color: var(--accent-strong);
-        font-weight: 500;
-      }
+    .input-with-suffix {
+      display: flex;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--dark-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: var(--transition);
+    }
 
-      input[type="range"] {
-        width: 100%;
-        appearance: none;
-        background: transparent;
-        cursor: pointer;
-        margin: 0.5rem 0;
-      }
+    .input-with-suffix:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
 
-      input[type="range"]::-webkit-slider-runnable-track {
-        height: 6px;
-        border-radius: 999px;
-        background: linear-gradient(
-          90deg,
-          var(--accent-strong),
-          rgba(148, 163, 184, 0.3)
-        );
-      }
+    .input-with-suffix input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 0.8rem 1rem;
+      color: var(--text-primary);
+      font-size: 1rem;
+      outline: none;
+    }
 
-      input[type="range"]::-webkit-slider-thumb {
-        appearance: none;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: white;
-        border: 2px solid var(--accent-strong);
-        margin-top: -6px;
-        box-shadow: 0 2px 6px rgba(2, 6, 23, 0.4);
-        transition: var(--transition);
-      }
+    .input-suffix {
+      padding: 0.8rem 1rem;
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--primary);
+      font-weight: 500;
+      border-left: 1px solid var(--dark-border);
+    }
 
-      input[type="range"]::-webkit-slider-thumb:hover {
-        transform: scale(1.1);
-      }
+    .slider-container {
+      margin-top: 1.6rem;
+    }
 
-      input[type="range"]::-moz-range-track {
-        height: 6px;
-        border-radius: 999px;
-        background: linear-gradient(
-          90deg,
-          var(--accent-strong),
-          rgba(148, 163, 184, 0.3)
-        );
-      }
+    .slider {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--dark-border);
+      outline: none;
+      -webkit-appearance: none;
+    }
 
-      input[type="range"]::-moz-range-thumb {
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: white;
-        border: 2px solid var(--accent-strong);
-        box-shadow: 0 2px 6px rgba(2, 6, 23, 0.4);
-      }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
 
-      .slider-caption {
-        font-size: 0.8rem;
-        color: var(--text-subtle);
-        margin-top: 0.25rem;
-      }
+    .slider-caption {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.6rem;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
 
-      .stats-card {
-        border-radius: 14px;
-        border: 1px solid var(--border-soft);
-        padding: 1.25rem 1.5rem;
-        background: linear-gradient(145deg, #0f172a, #1e293b);
-        margin-top: 0.75rem;
-        box-shadow: 0 4px 12px rgba(2, 6, 23, 0.4);
-      }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.1rem;
+      margin-top: 1.1rem;
+    }
 
-      .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 1rem;
-      }
+    .stat-card {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: var(--radius);
+      padding: 1.15rem 1.3rem;
+      border: 1px solid var(--dark-border);
+    }
 
-      @media (max-width: 600px) {
-        .stats-grid {
-          grid-template-columns: minmax(0, 1fr);
-        }
-      }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
 
-      .stat-label {
-        font-size: 0.8rem;
-        color: var(--text-subtle);
-        margin-bottom: 0.25rem;
-      }
+    .stat-value {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
 
-      .stat-value {
-        font-size: 1rem;
-        font-weight: 600;
-        margin-top: 0.15rem;
-      }
+    .info-pills {
+      display: flex;
+      gap: 0.75rem;
+      margin: 1.6rem 0 1.1rem;
+      flex-wrap: wrap;
+    }
 
-      .pill-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        margin-bottom: 0.75rem;
-      }
+    .info-pill {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--dark-border);
+      border-radius: 20px;
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
 
-      .pill {
-        font-size: 0.75rem;
-        border-radius: 999px;
-        padding: 0.3rem 0.75rem;
-        background: rgba(15, 23, 42, 0.6);
-        border: 1px solid var(--border-soft);
-        color: var(--text-subtle);
-      }
+    .impact-box {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.4rem;
+      margin-top: 0.75rem;
+      color: #a7f3d0;
+      font-size: 0.92rem;
+    }
 
-      .impact-box {
-        border-radius: 12px;
-        padding: 1.25rem 1.25rem;
-        font-size: 0.85rem;
-        line-height: 1.5;
-        background: linear-gradient(145deg, rgba(22, 163, 74, 0.08), rgba(22, 163, 74, 0.05));
-        border: 1px solid rgba(22, 163, 74, 0.3);
-        color: #bbf7d0;
-        min-height: 4rem;
-        white-space: pre-line;
-        box-shadow: 0 4px 12px rgba(2, 6, 23, 0.3);
-      }
+    .impact-box.empty {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px dashed var(--dark-border);
+      color: var(--text-muted);
+      text-align: center;
+      padding: 2rem 1.4rem;
+    }
 
-      .impact-box.empty {
-        color: var(--text-subtle);
-        border-style: dashed;
-        background: transparent;
-        border-color: var(--border-soft);
-      }
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2.2rem;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
 
-      .actions-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.75rem;
-        margin-top: 1.5rem;
-        flex-wrap: wrap;
-      }
+    .btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      padding: 0.85rem 1.6rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      white-space: nowrap;
+    }
 
-      button {
-        padding: 0.75rem 1.5rem;
-        border-radius: 999px;
-        border: none;
-        background: linear-gradient(to right, #0ea5e9, #22c55e);
-        color: white;
-        font-weight: 600;
-        font-size: 0.9rem;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        box-shadow: 0 8px 20px rgba(34, 197, 94, 0.3);
-        transition: var(--transition);
-        position: relative;
-        overflow: hidden;
-      }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+    }
 
-      button::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.5s;
-      }
+    .btn:active {
+      transform: translateY(0);
+    }
 
-      button:hover::after {
-        left: 100%;
-      }
+    .status-message {
+      font-size: 0.9rem;
+      padding: 0.5rem 0;
+      min-height: 1.2rem;
+    }
 
-      button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 25px rgba(34, 197, 94, 0.4);
-      }
+    .status-message.success {
+      color: var(--success);
+    }
 
-      button:active {
-        transform: translateY(0);
-      }
+    .status-message.error {
+      color: var(--error);
+    }
 
-      button:disabled {
-        opacity: 0.6;
-        cursor: default;
-        box-shadow: none;
-        transform: none;
-      }
-
-      button:disabled:hover::after {
-        left: -100%;
-      }
-
-      button span.icon {
-        font-size: 1.1rem;
-      }
-
-      #status {
-        font-size: 0.85rem;
-        padding: 0.5rem 0;
-      }
-
-      #status.success {
-        color: var(--success);
-      }
-
-      #status.error {
-        color: var(--danger);
-      }
-
-      .divider {
-        height: 1px;
-        background: linear-gradient(90deg, transparent, var(--border-soft), transparent);
-        margin: 1.5rem 0;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="shell">
-      <div class="app-header">
-        <div>
-          <div class="app-title">
-            <div class="app-icon">$</div>
-            <div>
-              <h1>401(k) Contributions</h1>
-              <div class="app-header-subtitle">
-                Optimize your retirement savings by adjusting your contribution settings
-              </div>
-            </div>
-          </div>
+    .footer {
+      margin-top: 3rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      padding-top: 1.75rem;
+      border-top: 1px solid var(--dark-border);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="logo">
+        <div class="logo-icon">$</div>
+        <div class="logo-text">
+          <h1>401(k) Contribution Settings</h1>
+          <p>Optimize your retirement savings strategy</p>
         </div>
-        <div class="badge">Demo environment · Mock data</div>
+      </div>
+      <div class="badge">Demo Environment · Mock Data</div>
+    </header>
+
+    <main class="card">
+      <div class="card-header">
+        <h2 class="card-title">Contribution Configuration</h2>
+        <p class="card-subtitle">
+          Adjust your 401(k) contribution settings and see the projected impact
+          on your retirement savings.
+        </p>
       </div>
 
-      <div class="card">
-        <div class="card-grid">
-          <!-- LEFT: controls -->
+      <div class="card-body">
+        <div class="grid">
+          <!-- Left Column: Configuration -->
           <div>
-            <!-- Step 1 -->
-            <div class="section-title">
-              <span class="step">1</span>
-              Contribution Type
-            </div>
-            <div class="section-subtext">
-              Choose whether to contribute a percentage of your salary or a fixed amount per paycheck.
-            </div>
-            <div class="radio-group">
-              <label class="radio-card selected">
-                <input
-                  type="radio"
-                  name="contributionType"
-                  value="percent"
-                  checked
-                />
-                <span>Percentage of salary</span>
-              </label>
-              <label class="radio-card">
-                <input type="radio" name="contributionType" value="dollar" />
-                <span>Fixed amount per paycheck</span>
-              </label>
-            </div>
+            <!-- Contribution Type -->
+            <section class="section">
+              <div class="section-title">
+                <div class="step-number">1</div>
+                <h3 class="section-heading">Contribution Type</h3>
+              </div>
+              <p class="section-description">
+                Choose how you want to contribute to your 401(k) account.
+              </p>
 
-            <div class="divider"></div>
-
-            <!-- Step 2 -->
-            <div class="section-title">
-              <span class="step">2</span>
-              Contribution Amount
-            </div>
-            <div class="section-subtext">
-              Adjust your contribution percentage to find the right balance for your financial goals.
-            </div>
-
-            <div class="input-row">
-              <div class="field">
-                <div class="label" id="valueLabel">
-                  Contribution Percentage
-                </div>
-                <div class="input-wrapper">
+              <div class="radio-group">
+                <label class="radio-card selected">
                   <input
-                    id="valueInput"
+                    type="radio"
+                    name="contributionType"
+                    value="percent"
+                    checked
+                  />
+                  Percentage of Salary
+                </label>
+                <label class="radio-card">
+                  <input
+                    type="radio"
+                    name="contributionType"
+                    value="dollar"
+                  />
+                  Fixed Amount
+                </label>
+              </div>
+            </section>
+
+            <!-- Contribution Amount -->
+            <section class="section">
+              <div class="section-title">
+                <div class="step-number">2</div>
+                <h3 class="section-heading">Contribution Amount</h3>
+              </div>
+              <p class="section-description">
+                Set your contribution percentage or fixed amount per paycheck.
+              </p>
+
+              <div class="input-group">
+                <label class="input-label" id="valueLabel"
+                  >Contribution Percentage</label
+                >
+                <div class="input-with-suffix">
+                  <input
                     type="number"
+                    id="valueInput"
                     min="0"
+                    max="100"
                     step="0.5"
-                    autocomplete="off"
                     value="6"
                   />
-                  <span class="suffix-pill" id="valueSuffix">%</span>
+                  <div class="input-suffix" id="valueSuffix">%</div>
                 </div>
               </div>
-              <div class="field">
-                <div class="label">Adjust with slider</div>
+
+              <div class="slider-container">
                 <input
-                  id="valueSlider"
                   type="range"
+                  class="slider"
+                  id="valueSlider"
                   min="0"
                   max="30"
                   step="0.5"
                   value="6"
                 />
                 <div class="slider-caption">
-                  Slide to explore different contribution levels
+                  <span id="sliderMin">0%</span>
+                  <span id="sliderRecommended">Recommended: 10–15%</span>
+                  <span id="sliderMax">30%</span>
                 </div>
               </div>
-            </div>
+            </section>
           </div>
 
-          <!-- RIGHT: snapshot + impact -->
+          <!-- Right Column: Preview & Impact -->
           <div>
-            <div class="section-title">
-              <span class="step">3</span>
-              Current Snapshot
-            </div>
-            <div class="section-subtext">
-              Overview of your current 401(k) settings and contributions.
-            </div>
+            <!-- Current Snapshot -->
+            <section class="section">
+              <div class="section-title">
+                <div class="step-number">3</div>
+                <h3 class="section-heading">Current Snapshot</h3>
+              </div>
+              <p class="section-description">
+                Overview of your current retirement savings situation.
+              </p>
 
-            <div class="stats-card">
               <div class="stats-grid">
-                <div>
-                  <div class="stat-label">Annual salary (mock)</div>
+                <div class="stat-card">
+                  <div class="stat-label">Annual Salary</div>
                   <div class="stat-value" id="salaryDisplay">$85,000</div>
                 </div>
-                <div>
-                  <div class="stat-label">Paychecks per year</div>
+                <div class="stat-card">
+                  <div class="stat-label">Paychecks/Year</div>
                   <div class="stat-value" id="payFreqDisplay">26</div>
                 </div>
-                <div>
-                  <div class="stat-label">YTD contributions (mock)</div>
+                <div class="stat-card">
+                  <div class="stat-label">YTD Contributions</div>
                   <div class="stat-value" id="ytdDisplay">$3,120</div>
                 </div>
-                <div>
-                  <div class="stat-label">Current setting</div>
+                <div class="stat-card">
+                  <div class="stat-label">Current Setting</div>
                   <div class="stat-value" id="currentSettingDisplay">6%</div>
                 </div>
               </div>
-            </div>
+            </section>
 
-            <div class="divider"></div>
+            <!-- Retirement Impact -->
+            <section class="section">
+              <div class="section-title">
+                <div class="step-number">4</div>
+                <h3 class="section-heading">Retirement Impact</h3>
+              </div>
+              <p class="section-description">
+                Projection of how your current settings will affect your
+                retirement savings.
+              </p>
 
-            <div class="section-title">
-              <span class="step">4</span>
-              Retirement Impact
-            </div>
-            <div class="section-subtext">
-              Projection of how your current settings will affect your retirement savings.
-            </div>
+              <div class="info-pills">
+                <div class="info-pill" id="agePill">Age: 35</div>
+                <div class="info-pill" id="retirementPill">Retirement: 65</div>
+                <div class="info-pill" id="assumptionPill">
+                  7% Annual Return
+                </div>
+              </div>
 
-            <div class="pill-row">
-              <div class="pill" id="agePill">Age: 35</div>
-              <div class="pill" id="retirementPill">Retirement: 65</div>
-              <div class="pill" id="assumptionPill">7% annual return</div>
-            </div>
+              <div class="impact-box" id="impactBox">
+                At your current 6% contribution rate, you are projected to
+                accumulate approximately <strong>$485,000</strong> by age 65,
+                assuming a 7% annual return and consistent contributions.
+              </div>
+            </section>
 
-            <div class="impact-box" id="impactBox">
-              At your current 6% contribution rate, you're projected to accumulate approximately $485,000 by age 65, assuming a 7% annual return and consistent contributions.
-            </div>
-
-            <div class="actions-row">
-              <button id="saveButton">
-                <span class="icon">💾</span>
-                <span>Save Contribution Settings</span>
+            <!-- Actions -->
+            <div class="actions">
+              <button class="btn" id="saveButton">
+                Save Contribution Settings
               </button>
-              <div id="status"></div>
+              <div class="status-message" id="status"></div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </main>
 
-    <script>
-      // Basic interactivity for demonstration
-      document.addEventListener('DOMContentLoaded', function() {
-        const contributionTypeRadios = document.querySelectorAll('input[name="contributionType"]');
-        const valueInput = document.getElementById('valueInput');
-        const valueSlider = document.getElementById('valueSlider');
-        const valueLabel = document.getElementById('valueLabel');
-        const valueSuffix = document.getElementById('valueSuffix');
-        const saveButton = document.getElementById('saveButton');
-        const status = document.getElementById('status');
-        
-        // Update slider when input changes
-        valueInput.addEventListener('input', function() {
-          valueSlider.value = this.value;
-          updateImpact();
-        });
-        
-        // Update input when slider changes
-        valueSlider.addEventListener('input', function() {
-          valueInput.value = this.value;
-          updateImpact();
-        });
-        
-        // Handle contribution type changes
-        contributionTypeRadios.forEach(radio => {
-          radio.addEventListener('change', function() {
-            // Update radio card styling
-            document.querySelectorAll('.radio-card').forEach(card => {
-              card.classList.remove('selected');
-            });
-            this.closest('.radio-card').classList.add('selected');
-            
-            // Update UI based on selection
-            if (this.value === 'percent') {
-              valueLabel.textContent = 'Contribution Percentage';
-              valueSuffix.textContent = '%';
-              valueInput.min = 0;
-              valueInput.max = 30;
-              valueSlider.min = 0;
-              valueSlider.max = 30;
-            } else {
-              valueLabel.textContent = 'Fixed Amount';
-              valueSuffix.textContent = '$';
-              valueInput.min = 0;
-              valueInput.max = 1000;
-              valueSlider.min = 0;
-              valueSlider.max = 1000;
-            }
-            
-            updateImpact();
-          });
-        });
-        
-        // Save button handler
-        saveButton.addEventListener('click', function() {
-          status.textContent = 'Settings saved successfully!';
-          status.className = 'success';
-          
-          // Reset status after 3 seconds
-          setTimeout(() => {
-            status.textContent = '';
-            status.className = '';
-          }, 3000);
-        });
-        
-        // Update impact box based on current values
-        function updateImpact() {
-          const impactBox = document.getElementById('impactBox');
-          const type = document.querySelector('input[name="contributionType"]:checked').value;
-          const value = valueInput.value;
-          
-          if (type === 'percent') {
-            impactBox.textContent = `At your current ${value}% contribution rate, you're projected to accumulate approximately $${(value * 14000).toLocaleString()} by age 65, assuming a 7% annual return and consistent contributions.`;
-            impactBox.classList.remove('empty');
-          } else {
-            impactBox.textContent = `With a fixed contribution of $${value} per paycheck, you're projected to accumulate approximately $${(value * 650).toLocaleString()} by age 65, assuming a 7% annual return and consistent contributions.`;
-            impactBox.classList.remove('empty');
-          }
+    <footer class="footer">
+      <p>
+        This is a demonstration interface. All data shown is for illustrative
+        purposes only.
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // DOM Elements
+      const contributionTypeRadios = document.querySelectorAll(
+        'input[name="contributionType"]'
+      );
+      const radioCards = document.querySelectorAll(".radio-card");
+
+      const valueInput = document.getElementById("valueInput");
+      const valueSlider = document.getElementById("valueSlider");
+      const valueLabel = document.getElementById("valueLabel");
+      const valueSuffix = document.getElementById("valueSuffix");
+
+      const salaryDisplay = document.getElementById("salaryDisplay");
+      const payFreqDisplay = document.getElementById("payFreqDisplay");
+      const ytdDisplay = document.getElementById("ytdDisplay");
+      const currentSettingDisplay = document.getElementById(
+        "currentSettingDisplay"
+      );
+
+      const agePill = document.getElementById("agePill");
+      const retirementPill = document.getElementById("retirementPill");
+      const assumptionPill = document.getElementById("assumptionPill");
+
+      const impactBox = document.getElementById("impactBox");
+      const saveButton = document.getElementById("saveButton");
+      const status = document.getElementById("status");
+
+      const sliderMin = document.getElementById("sliderMin");
+      const sliderRecommended = document.getElementById("sliderRecommended");
+      const sliderMax = document.getElementById("sliderMax");
+
+      // Will hold data from backend
+      let state = null;
+
+      // Helper: money formatter
+      function formatMoney(amount, decimals = 0) {
+        return `$${amount.toLocaleString(undefined, {
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        })}`;
+      }
+
+      // Get selected contribution type
+      function getSelectedType() {
+        const checked = document.querySelector(
+          'input[name="contributionType"]:checked'
+        );
+        return checked ? checked.value : "percent";
+      }
+
+      // Sync labels, suffix, slider ranges, and slider captions for type
+      function syncTypeUI(type) {
+        // If state is available, compute paycheck amount; otherwise fall back
+        const paycheckAmount =
+          state && state.salary && state.payFrequencyPerYear
+            ? state.salary / state.payFrequencyPerYear
+            : 5000;
+
+        if (type === "percent") {
+          // 0–100% for percent mode
+          valueLabel.textContent = "Contribution Percentage";
+          valueSuffix.textContent = "%";
+
+          valueInput.min = 0;
+          valueInput.max = 100;
+          valueInput.step = 0.5;
+
+          valueSlider.min = 0;
+          valueSlider.max = 100;
+          valueSlider.step = 0.5;
+
+          sliderMin.textContent = "0%";
+          sliderRecommended.textContent = "Recommended: 10–15%";
+          sliderMax.textContent = "100%";
+        } else {
+          // 0–full paycheck amount for dollar mode
+          valueLabel.textContent = "Fixed Amount";
+          valueSuffix.textContent = "$";
+
+          valueInput.min = 0;
+          valueInput.max = Math.round(paycheckAmount);
+          valueInput.step = 50;
+
+          valueSlider.min = 0;
+          valueSlider.max = Math.round(paycheckAmount);
+          valueSlider.step = Math.max(10, Math.round(paycheckAmount / 40)); // reasonable granularity
+
+          sliderMin.textContent = "$0";
+          sliderRecommended.textContent = "Typical: $200–$400";
+          sliderMax.textContent = formatMoney(Math.round(paycheckAmount));
         }
-        
-        // Initialize with some values
+      }
+
+      // Load data from backend and initialize UI
+      async function loadData() {
+        try {
+          const res = await fetch("/api/contribution");
+          if (!res.ok) throw new Error("Failed to load data");
+          state = await res.json();
+
+          const {
+            current,
+            salary,
+            payFrequencyPerYear,
+            ytdContributions,
+            age,
+            retirementAge,
+            assumedAnnualReturnRate,
+          } = state;
+
+          // Select correct radio + radio-card style
+          contributionTypeRadios.forEach((radio) => {
+            radio.checked = radio.value === current.type;
+          });
+          radioCards.forEach((card) => {
+            const input = card.querySelector("input[type='radio']");
+            if (input && input.value === current.type) {
+              card.classList.add("selected");
+            } else {
+              card.classList.remove("selected");
+            }
+          });
+
+          // Sync UI for current type (now that state is set)
+          syncTypeUI(current.type);
+
+          // Clamp value to slider range
+          const max = Number(valueSlider.max);
+          let v = Number(current.value) || 0;
+          if (v < 0) v = 0;
+          if (v > max) v = max;
+
+          valueInput.value = v;
+          valueSlider.value = v;
+
+          // Populate snapshot stats
+          salaryDisplay.textContent = formatMoney(salary);
+          payFreqDisplay.textContent = String(payFrequencyPerYear);
+          ytdDisplay.textContent = formatMoney(ytdContributions);
+
+          currentSettingDisplay.textContent =
+            current.type === "percent"
+              ? `${v}% of each paycheck`
+              : formatMoney(v) + " per paycheck";
+
+          // Pills
+          agePill.textContent = `Age: ${age}`;
+          retirementPill.textContent = `Retirement: ${retirementAge}`;
+          assumptionPill.textContent = `${(
+            assumedAnnualReturnRate * 100
+          ).toFixed(1)}% Annual Return`;
+
+          updateImpact();
+        } catch (err) {
+          console.error(err);
+          status.textContent =
+            "Failed to load contribution data. Please refresh.";
+          status.className = "status-message error";
+        }
+      }
+
+      // Compute and update impact box
+      function updateImpact() {
+        if (!state) {
+          impactBox.classList.add("empty");
+          impactBox.textContent =
+            "Adjust your contribution to see a projected retirement impact.";
+          return;
+        }
+
+        const type = getSelectedType();
+        const value = Number(valueInput.value) || 0;
+
+        const {
+          salary,
+          payFrequencyPerYear,
+          age,
+          retirementAge,
+          assumedAnnualReturnRate,
+        } = state;
+
+        const years = retirementAge - age;
+        const periods = years * payFrequencyPerYear;
+
+        const rPerPeriod =
+          Math.pow(1 + assumedAnnualReturnRate, 1 / payFrequencyPerYear) - 1;
+
+        function futureValuePerPay(perPay) {
+          if (perPay <= 0 || periods <= 0 || rPerPeriod <= 0) return 0;
+          return (
+            perPay * ((Math.pow(1 + rPerPeriod, periods) - 1) / rPerPeriod)
+          );
+        }
+
+        let perPayCurrent;
+        if (type === "percent") {
+          const pct = value / 100;
+          perPayCurrent = (salary * pct) / payFrequencyPerYear;
+        } else {
+          perPayCurrent = value;
+        }
+
+        const fvCurrent = futureValuePerPay(perPayCurrent);
+
+        // Comparison scenario
+        let perPayBoost;
+        if (type === "percent") {
+          const pctBoost = (value + 1) / 100;
+          perPayBoost = (salary * pctBoost) / payFrequencyPerYear;
+        } else {
+          perPayBoost = perPayCurrent + 100;
+        }
+        const fvBoost = futureValuePerPay(perPayBoost);
+        const diff = fvBoost - fvCurrent;
+
+        impactBox.classList.remove("empty");
+
+        if (type === "percent") {
+          impactBox.innerHTML = `
+          At your current <strong>${value.toFixed(
+            1
+          )}%</strong> contribution rate, you are projected to accumulate approximately 
+          <strong>${formatMoney(
+            Math.round(fvCurrent)
+          )}</strong> by age ${retirementAge}, assuming steady contributions and a ${(
+            assumedAnnualReturnRate * 100
+          ).toFixed(1)}% annual return.
+          <br/><br/>
+          Increasing your contribution by just 1% (to <strong>${(value + 1).toFixed(
+            1
+          )}%</strong>) could add roughly 
+          <strong>${formatMoney(Math.round(diff))}</strong> more to your retirement savings.
+        `;
+        } else {
+          impactBox.innerHTML = `
+          With a fixed contribution of <strong>${formatMoney(
+            Math.round(perPayCurrent)
+          )}</strong> per paycheck, you are projected to accumulate approximately 
+          <strong>${formatMoney(
+            Math.round(fvCurrent)
+          )}</strong> by age ${retirementAge}, assuming steady contributions and a ${(
+            assumedAnnualReturnRate * 100
+          ).toFixed(1)}% annual return.
+          <br/><br/>
+          Increasing your contribution by <strong>$100</strong> per paycheck could add roughly 
+          <strong>${formatMoney(Math.round(diff))}</strong> more to your retirement savings.
+        `;
+        }
+      }
+
+      /* Event listeners */
+
+      // Input -> slider + impact
+      valueInput.addEventListener("input", () => {
+        const val = Number(valueInput.value) || 0;
+        const max = Number(valueSlider.max);
+        const clamped = Math.min(Math.max(0, val), max);
+        valueInput.value = clamped;
+        valueSlider.value = clamped;
         updateImpact();
       });
-    </script>
-  </body>
+
+      // Slider -> input + impact
+      valueSlider.addEventListener("input", () => {
+        valueInput.value = valueSlider.value;
+        updateImpact();
+      });
+
+      // Contribution type changed
+      contributionTypeRadios.forEach((radio) => {
+        radio.addEventListener("change", () => {
+          const type = getSelectedType();
+
+          // Update radio-card visual state
+          radioCards.forEach((card) => card.classList.remove("selected"));
+          const card = radio.closest(".radio-card");
+          if (card) card.classList.add("selected");
+
+          // Update slider limits / labels based on state
+          syncTypeUI(type);
+
+          // Adjust value defaults when switching modes
+          if (type === "percent") {
+            if (Number(valueInput.value) === 0) {
+              valueInput.value = 6;
+            }
+          } else {
+            if (Number(valueInput.value) === 0) {
+              valueInput.value = 200;
+            }
+          }
+
+          // Keep slider in sync and clamped
+          const val = Number(valueInput.value) || 0;
+          const max = Number(valueSlider.max);
+          valueSlider.value = Math.min(val, max);
+
+          updateImpact();
+        });
+      });
+
+      // Save to backend
+      saveButton.addEventListener("click", async () => {
+        if (!state) return;
+
+        status.textContent = "";
+        status.className = "status-message";
+        saveButton.disabled = true;
+
+        const type = getSelectedType();
+        const value = Number(valueInput.value) || 0;
+
+        try {
+          const res = await fetch("/api/contribution", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ type, value }),
+          });
+
+          const data = await res.json();
+          if (!res.ok) {
+            throw new Error(data.error || "Failed to save");
+          }
+
+          // Update local state
+          state.current = data.current;
+
+          // Update "current setting" label
+          currentSettingDisplay.textContent =
+            data.current.type === "percent"
+              ? `${data.current.value}% of each paycheck`
+              : formatMoney(data.current.value) + " per paycheck";
+
+          // Timestamped success message
+          const savedAt = data.current.savedAt
+            ? new Date(data.current.savedAt)
+            : new Date();
+
+          const dateString = savedAt.toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          });
+
+          const timeString = savedAt.toLocaleTimeString(undefined, {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+
+          status.textContent = `Settings saved successfully on ${dateString} at ${timeString}.`;
+          status.className = "status-message success";
+        } catch (err) {
+          console.error(err);
+          status.textContent =
+            "Something went wrong while saving. Please try again.";
+          status.className = "status-message error";
+        } finally {
+          saveButton.disabled = false;
+        }
+      });
+
+      // Kick things off
+      loadData();
+    });
+  </script>
+</body>
 </html>

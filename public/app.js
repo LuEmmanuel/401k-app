@@ -44,20 +44,22 @@ function formatMoney(amount) {
 function initUIFromState() {
   const { current, salary, payFrequencyPerYear, ytdContributions } = state;
 
-  // Set radio buttons
+  // Set radio selection
   for (const r of typeRadios) {
     r.checked = r.value === current.type;
   }
 
-  // Adjust labels and slider limits for current type
+  // Set labels and slider limits based on current.type and paycheck size
   syncTypeLabels(current.type);
 
-  // Set inputs
-  valueInput.value = current.value;
-  valueSlider.value =
-    current.type === "percent"
-      ? current.value
-      : Math.min(current.value, Number(valueSlider.max));
+  // Now that min/max are set based on type, clamp current value into that range
+  const max = Number(valueSlider.max);
+  let v = Number(current.value) || 0;
+  if (v < 0) v = 0;
+  if (v > max) v = max;
+
+  valueInput.value = v;
+  valueSlider.value = v;
 
   // Snapshot stats
   salaryDisplay.textContent = formatMoney(salary);
@@ -65,15 +67,15 @@ function initUIFromState() {
   ytdDisplay.textContent = formatMoney(ytdContributions);
   currentSettingDisplay.textContent =
     current.type === "percent"
-      ? `${current.value}% of each paycheck`
-      : formatMoney(current.value) + " per paycheck";
+      ? `${v}% of each paycheck`
+      : formatMoney(v) + " per paycheck";
 
   // Pills
   agePill.textContent = `Age (mock): ${state.age}`;
   retirementPill.textContent = `Retirement age: ${state.retirementAge}`;
-  assumptionPill.textContent = `Assumed return: ${(
-    state.assumedAnnualReturnRate * 100
-  ).toFixed(1)}% / year`;
+  assumptionPill.textContent = `Assumed return: ${(state.assumedAnnualReturnRate * 100).toFixed(
+    1
+  )}% / year`;
 
   updateImpact();
 }
@@ -86,16 +88,31 @@ function getSelectedType() {
 }
 
 function syncTypeLabels(type) {
+  // Use salary and pay frequency from the backend to compute one paycheck
+  const paycheckAmount = state
+    ? state.salary / state.payFrequencyPerYear
+    : null;
+
   if (type === "percent") {
+    // Percent mode: 0–100%
     valueLabel.textContent = "Contribution (% of paycheck)";
     valueSuffix.textContent = "%";
     valueInput.step = "0.5";
-    valueSlider.max = "30";
+
+    valueSlider.min = "0";
+    valueSlider.max = "100";
   } else {
+    // Dollar mode: 0–full paycheck amount (from mock data)
     valueLabel.textContent = "Contribution ($ per paycheck)";
     valueSuffix.textContent = "$";
     valueInput.step = "50";
-    valueSlider.max = "5000";
+
+    valueSlider.min = "0";
+
+    // Max per paycheck contribution = salary / payFrequency
+    // Fallback to 5000 if state is not ready for some reason
+    const maxDollar = paycheckAmount || 5000;
+    valueSlider.max = String(Math.round(maxDollar));
   }
 }
 
@@ -182,32 +199,43 @@ Adding an extra $100 per paycheck could increase that by roughly ${formatMoney(
 typeRadios.forEach((radio) => {
   radio.addEventListener("change", () => {
     const type = getSelectedType();
+
+    // Update label, suffix, and slider min/max based on state
     syncTypeLabels(type);
 
-    // Clamp value and sync slider based on type
-    if (type === "percent") {
-      valueSlider.max = "30";
-      if (Number(valueInput.value) > 30) valueInput.value = 30;
-    } else {
-      valueSlider.max = "5000";
-    }
+    // Keep slider and input in sync and clamped to new range
+    const max = Number(valueSlider.max);
+    let value = Number(valueInput.value) || 0;
+    if (value < 0) value = 0;
+    if (value > max) value = max;
 
-    valueSlider.value = valueInput.value || 0;
+    valueInput.value = value;
+    valueSlider.value = value;
+
     updateImpact();
   });
 });
 
 // Slider -> input
 valueSlider.addEventListener("input", () => {
-  valueInput.value = valueSlider.value;
+  const max = Number(valueSlider.max);
+  let v = Number(valueSlider.value) || 0;
+  if (v < 0) v = 0;
+  if (v > max) v = max;
+
+  valueInput.value = v;
   updateImpact();
 });
 
 // Input -> slider
 valueInput.addEventListener("input", () => {
-  const value = Number(valueInput.value) || 0;
+  let value = Number(valueInput.value) || 0;
   const max = Number(valueSlider.max);
-  valueSlider.value = Math.min(Math.max(0, value), max);
+  if (value < 0) value = 0;
+  if (value > max) value = max;
+
+  valueInput.value = value;
+  valueSlider.value = value;
   updateImpact();
 });
 
@@ -232,15 +260,34 @@ saveButton.addEventListener("click", async () => {
       throw new Error(data.error || "Failed to save");
     }
 
-    statusEl.textContent = "Your contribution setting has been saved.";
-    statusEl.className = "success";
-
-    // Update in-memory state & display
+    // Update in-memory state
     state.current = data.current;
+
+    // Format timestamp for toast
+    const savedAt = data.current.savedAt
+      ? new Date(data.current.savedAt)
+      : new Date();
+
+    const dateString = savedAt.toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+
+    const timeString = savedAt.toLocaleTimeString(undefined, {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    // Update "current setting" line
     currentSettingDisplay.textContent =
       data.current.type === "percent"
         ? `${data.current.value}% of each paycheck`
         : formatMoney(data.current.value) + " per paycheck";
+
+    // Success toast with time
+    statusEl.textContent = `Your contribution setting was saved on ${dateString} at ${timeString}.`;
+    statusEl.className = "success";
   } catch (err) {
     console.error(err);
     statusEl.textContent =

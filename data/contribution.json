@@ -1,7 +1,8 @@
 {
   "current": {
-    "type": "percent",
-    "value": 30
+    "type": "dollar",
+    "value": 44,
+    "savedAt": "2025-11-20T04:40:05.805Z"
   },
   "salary": 90000,
   "payFrequencyPerYear": 24,
