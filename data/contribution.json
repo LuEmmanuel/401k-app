@@ -1,0 +1,12 @@
+{
+  "current": {
+    "type": "percent",
+    "value": 30
+  },
+  "salary": 90000,
+  "payFrequencyPerYear": 24,
+  "ytdContributions": 9000,
+  "age": 30,
+  "retirementAge": 65,
+  "assumedAnnualReturnRate": 0.07
+}

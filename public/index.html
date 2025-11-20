@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>401(k) Contribution Settings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        --bg: #0f172a;
+        --card-bg: #020617;
+        --accent: #38bdf8;
+        --accent-soft: rgba(56, 189, 248, 0.08);
+        --accent-strong: #0ea5e9;
+        --text-main: #e5e7eb;
+        --text-subtle: #9ca3af;
+        --border-soft: #1e293b;
+        --danger: #f87171;
+        --success: #4ade80;
+        --card-radius: 16px;
+        --transition: all 0.2s ease;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top left, #1d2533, #020617 55%);
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        line-height: 1.5;
+      }
+
+      .shell {
+        width: 100%;
+        max-width: 1000px;
+      }
+
+      .app-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        gap: 1rem;
+      }
+
+      .app-title {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .app-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: white;
+        box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+
+      .app-header-subtitle {
+        font-size: 0.9rem;
+        color: var(--text-subtle);
+        margin-top: 0.25rem;
+      }
+
+      .badge {
+        border-radius: 999px;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.75rem;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        color: var(--text-subtle);
+        white-space: nowrap;
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(10px);
+      }
+
+      .card {
+        background: linear-gradient(145deg, #0f172a, #1e293b);
+        border-radius: var(--card-radius);
+        padding: 2rem;
+        border: 1px solid rgba(56, 189, 248, 0.1);
+        box-shadow: 0 20px 40px rgba(2, 6, 23, 0.6);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.4), transparent);
+      }
+
+      .card-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr);
+        gap: 2.5rem;
+      }
+
+      @media (max-width: 800px) {
+        .card-grid {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 1.5rem;
+        }
+      }
+
+      .section-title {
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .section-title span.step {
+        width: 22px;
+        height: 22px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        color: var(--accent-strong);
+        font-weight: 600;
+      }
+
+      .section-subtext {
+        font-size: 0.85rem;
+        color: var(--text-subtle);
+        margin-bottom: 1rem;
+        line-height: 1.5;
+      }
+
+      .radio-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .radio-card {
+        border-radius: 12px;
+        border: 1px solid var(--border-soft);
+        padding: 0.85rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        cursor: pointer;
+        font-size: 0.9rem;
+        background: rgba(15, 23, 42, 0.5);
+        transition: var(--transition);
+        flex: 1;
+        min-width: 180px;
+      }
+
+      .radio-card input {
+        accent-color: var(--accent-strong);
+      }
+
+      .radio-card:hover {
+        border-color: var(--accent);
+        background: rgba(56, 189, 248, 0.05);
+      }
+
+      .radio-card.selected {
+        border-color: var(--accent);
+        background: rgba(56, 189, 248, 0.08);
+      }
+
+      .label {
+        font-size: 0.85rem;
+        color: var(--text-subtle);
+        margin-bottom: 0.4rem;
+        font-weight: 500;
+      }
+
+      .input-row {
+        display: flex;
+        gap: 1.5rem;
+        align-items: flex-end;
+        flex-wrap: wrap;
+      }
+
+      .field {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .input-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(15, 23, 42, 0.6);
+        border-radius: 12px;
+        border: 1px solid var(--border-soft);
+        padding: 0.6rem 0.9rem 0.6rem 1rem;
+        transition: var(--transition);
+      }
+
+      .input-wrapper:focus-within {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+      }
+
+      input[type="number"] {
+        background: transparent;
+        border: none;
+        outline: none;
+        color: var(--text-main);
+        width: 80px;
+        font-size: 1rem;
+        font-weight: 500;
+      }
+
+      input[type="number"]::-webkit-outer-spin-button,
+      input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      .suffix-pill {
+        border-radius: 999px;
+        padding: 0.2rem 0.6rem;
+        font-size: 0.75rem;
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+        font-weight: 500;
+      }
+
+      input[type="range"] {
+        width: 100%;
+        appearance: none;
+        background: transparent;
+        cursor: pointer;
+        margin: 0.5rem 0;
+      }
+
+      input[type="range"]::-webkit-slider-runnable-track {
+        height: 6px;
+        border-radius: 999px;
+        background: linear-gradient(
+          90deg,
+          var(--accent-strong),
+          rgba(148, 163, 184, 0.3)
+        );
+      }
+
+      input[type="range"]::-webkit-slider-thumb {
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: white;
+        border: 2px solid var(--accent-strong);
+        margin-top: -6px;
+        box-shadow: 0 2px 6px rgba(2, 6, 23, 0.4);
+        transition: var(--transition);
+      }
+
+      input[type="range"]::-webkit-slider-thumb:hover {
+        transform: scale(1.1);
+      }
+
+      input[type="range"]::-moz-range-track {
+        height: 6px;
+        border-radius: 999px;
+        background: linear-gradient(
+          90deg,
+          var(--accent-strong),
+          rgba(148, 163, 184, 0.3)
+        );
+      }
+
+      input[type="range"]::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: white;
+        border: 2px solid var(--accent-strong);
+        box-shadow: 0 2px 6px rgba(2, 6, 23, 0.4);
+      }
+
+      .slider-caption {
+        font-size: 0.8rem;
+        color: var(--text-subtle);
+        margin-top: 0.25rem;
+      }
+
+      .stats-card {
+        border-radius: 14px;
+        border: 1px solid var(--border-soft);
+        padding: 1.25rem 1.5rem;
+        background: linear-gradient(145deg, #0f172a, #1e293b);
+        margin-top: 0.75rem;
+        box-shadow: 0 4px 12px rgba(2, 6, 23, 0.4);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      @media (max-width: 600px) {
+        .stats-grid {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+
+      .stat-label {
+        font-size: 0.8rem;
+        color: var(--text-subtle);
+        margin-bottom: 0.25rem;
+      }
+
+      .stat-value {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-top: 0.15rem;
+      }
+
+      .pill-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .pill {
+        font-size: 0.75rem;
+        border-radius: 999px;
+        padding: 0.3rem 0.75rem;
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid var(--border-soft);
+        color: var(--text-subtle);
+      }
+
+      .impact-box {
+        border-radius: 12px;
+        padding: 1.25rem 1.25rem;
+        font-size: 0.85rem;
+        line-height: 1.5;
+        background: linear-gradient(145deg, rgba(22, 163, 74, 0.08), rgba(22, 163, 74, 0.05));
+        border: 1px solid rgba(22, 163, 74, 0.3);
+        color: #bbf7d0;
+        min-height: 4rem;
+        white-space: pre-line;
+        box-shadow: 0 4px 12px rgba(2, 6, 23, 0.3);
+      }
+
+      .impact-box.empty {
+        color: var(--text-subtle);
+        border-style: dashed;
+        background: transparent;
+        border-color: var(--border-soft);
+      }
+
+      .actions-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      button {
+        padding: 0.75rem 1.5rem;
+        border-radius: 999px;
+        border: none;
+        background: linear-gradient(to right, #0ea5e9, #22c55e);
+        color: white;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 8px 20px rgba(34, 197, 94, 0.3);
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+      }
+
+      button::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+      }
+
+      button:hover::after {
+        left: 100%;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(34, 197, 94, 0.4);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      button:disabled {
+        opacity: 0.6;
+        cursor: default;
+        box-shadow: none;
+        transform: none;
+      }
+
+      button:disabled:hover::after {
+        left: -100%;
+      }
+
+      button span.icon {
+        font-size: 1.1rem;
+      }
+
+      #status {
+        font-size: 0.85rem;
+        padding: 0.5rem 0;
+      }
+
+      #status.success {
+        color: var(--success);
+      }
+
+      #status.error {
+        color: var(--danger);
+      }
+
+      .divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--border-soft), transparent);
+        margin: 1.5rem 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="app-header">
+        <div>
+          <div class="app-title">
+            <div class="app-icon">$</div>
+            <div>
+              <h1>401(k) Contributions</h1>
+              <div class="app-header-subtitle">
+                Optimize your retirement savings by adjusting your contribution settings
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="badge">Demo environment · Mock data</div>
+      </div>
+
+      <div class="card">
+        <div class="card-grid">
+          <!-- LEFT: controls -->
+          <div>
+            <!-- Step 1 -->
+            <div class="section-title">
+              <span class="step">1</span>
+              Contribution Type
+            </div>
+            <div class="section-subtext">
+              Choose whether to contribute a percentage of your salary or a fixed amount per paycheck.
+            </div>
+            <div class="radio-group">
+              <label class="radio-card selected">
+                <input
+                  type="radio"
+                  name="contributionType"
+                  value="percent"
+                  checked
+                />
+                <span>Percentage of salary</span>
+              </label>
+              <label class="radio-card">
+                <input type="radio" name="contributionType" value="dollar" />
+                <span>Fixed amount per paycheck</span>
+              </label>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Step 2 -->
+            <div class="section-title">
+              <span class="step">2</span>
+              Contribution Amount
+            </div>
+            <div class="section-subtext">
+              Adjust your contribution percentage to find the right balance for your financial goals.
+            </div>
+
+            <div class="input-row">
+              <div class="field">
+                <div class="label" id="valueLabel">
+                  Contribution Percentage
+                </div>
+                <div class="input-wrapper">
+                  <input
+                    id="valueInput"
+                    type="number"
+                    min="0"
+                    step="0.5"
+                    autocomplete="off"
+                    value="6"
+                  />
+                  <span class="suffix-pill" id="valueSuffix">%</span>
+                </div>
+              </div>
+              <div class="field">
+                <div class="label">Adjust with slider</div>
+                <input
+                  id="valueSlider"
+                  type="range"
+                  min="0"
+                  max="30"
+                  step="0.5"
+                  value="6"
+                />
+                <div class="slider-caption">
+                  Slide to explore different contribution levels
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: snapshot + impact -->
+          <div>
+            <div class="section-title">
+              <span class="step">3</span>
+              Current Snapshot
+            </div>
+            <div class="section-subtext">
+              Overview of your current 401(k) settings and contributions.
+            </div>
+
+            <div class="stats-card">
+              <div class="stats-grid">
+                <div>
+                  <div class="stat-label">Annual salary (mock)</div>
+                  <div class="stat-value" id="salaryDisplay">$85,000</div>
+                </div>
+                <div>
+                  <div class="stat-label">Paychecks per year</div>
+                  <div class="stat-value" id="payFreqDisplay">26</div>
+                </div>
+                <div>
+                  <div class="stat-label">YTD contributions (mock)</div>
+                  <div class="stat-value" id="ytdDisplay">$3,120</div>
+                </div>
+                <div>
+                  <div class="stat-label">Current setting</div>
+                  <div class="stat-value" id="currentSettingDisplay">6%</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="section-title">
+              <span class="step">4</span>
+              Retirement Impact
+            </div>
+            <div class="section-subtext">
+              Projection of how your current settings will affect your retirement savings.
+            </div>
+
+            <div class="pill-row">
+              <div class="pill" id="agePill">Age: 35</div>
+              <div class="pill" id="retirementPill">Retirement: 65</div>
+              <div class="pill" id="assumptionPill">7% annual return</div>
+            </div>
+
+            <div class="impact-box" id="impactBox">
+              At your current 6% contribution rate, you're projected to accumulate approximately $485,000 by age 65, assuming a 7% annual return and consistent contributions.
+            </div>
+
+            <div class="actions-row">
+              <button id="saveButton">
+                <span class="icon">💾</span>
+                <span>Save Contribution Settings</span>
+              </button>
+              <div id="status"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Basic interactivity for demonstration
+      document.addEventListener('DOMContentLoaded', function() {
+        const contributionTypeRadios = document.querySelectorAll('input[name="contributionType"]');
+        const valueInput = document.getElementById('valueInput');
+        const valueSlider = document.getElementById('valueSlider');
+        const valueLabel = document.getElementById('valueLabel');
+        const valueSuffix = document.getElementById('valueSuffix');
+        const saveButton = document.getElementById('saveButton');
+        const status = document.getElementById('status');
+        
+        // Update slider when input changes
+        valueInput.addEventListener('input', function() {
+          valueSlider.value = this.value;
+          updateImpact();
+        });
+        
+        // Update input when slider changes
+        valueSlider.addEventListener('input', function() {
+          valueInput.value = this.value;
+          updateImpact();
+        });
+        
+        // Handle contribution type changes
+        contributionTypeRadios.forEach(radio => {
+          radio.addEventListener('change', function() {
+            // Update radio card styling
+            document.querySelectorAll('.radio-card').forEach(card => {
+              card.classList.remove('selected');
+            });
+            this.closest('.radio-card').classList.add('selected');
+            
+            // Update UI based on selection
+            if (this.value === 'percent') {
+              valueLabel.textContent = 'Contribution Percentage';
+              valueSuffix.textContent = '%';
+              valueInput.min = 0;
+              valueInput.max = 30;
+              valueSlider.min = 0;
+              valueSlider.max = 30;
+            } else {
+              valueLabel.textContent = 'Fixed Amount';
+              valueSuffix.textContent = '$';
+              valueInput.min = 0;
+              valueInput.max = 1000;
+              valueSlider.min = 0;
+              valueSlider.max = 1000;
+            }
+            
+            updateImpact();
+          });
+        });
+        
+        // Save button handler
+        saveButton.addEventListener('click', function() {
+          status.textContent = 'Settings saved successfully!';
+          status.className = 'success';
+          
+          // Reset status after 3 seconds
+          setTimeout(() => {
+            status.textContent = '';
+            status.className = '';
+          }, 3000);
+        });
+        
+        // Update impact box based on current values
+        function updateImpact() {
+          const impactBox = document.getElementById('impactBox');
+          const type = document.querySelector('input[name="contributionType"]:checked').value;
+          const value = valueInput.value;
+          
+          if (type === 'percent') {
+            impactBox.textContent = `At your current ${value}% contribution rate, you're projected to accumulate approximately $${(value * 14000).toLocaleString()} by age 65, assuming a 7% annual return and consistent contributions.`;
+            impactBox.classList.remove('empty');
+          } else {
+            impactBox.textContent = `With a fixed contribution of $${value} per paycheck, you're projected to accumulate approximately $${(value * 650).toLocaleString()} by age 65, assuming a 7% annual return and consistent contributions.`;
+            impactBox.classList.remove('empty');
+          }
+        }
+        
+        // Initialize with some values
+        updateImpact();
+      });
+    </script>
+  </body>
+</html>
